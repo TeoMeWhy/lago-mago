@@ -1,55 +1,66 @@
 # Databricks notebook source
+# DBTITLE 1,Imports
 import delta
+
+def table_exists(catalog, database, table):
+    count = (spark.sql(f"SHOW TABLES FROM {catalog}.{database}")
+                .filter(f"database = '{database}' AND tableName = '{table}'")
+                .count())
+    return count == 1
+
+# COMMAND ----------
+
+# DBTITLE 1,SETUP
+catalog = "bronze"
+schema = "upsell"
+tablename = dbutils.widgets.get("tablename")
+id_field = dbutils.widgets.get("id_field")
+timestamp_field = dbutils.widgets.get("timestamp_field")
 
 # COMMAND ----------
 
 # DBTITLE 1,Ingestão do Full Load
-df_full = spark.read.format("parquet").load("/Volumes/raw/upsell/full_load/customers/")
+if not table_exists(catalog, schema, tablename):
 
-(df_full.coalesce(1)
-        .write
-        .format("delta")
-        .mode("overwrite")
-        .saveAsTable("bronze.upsell.customers"))
+    print("Tabela não existente, criando...")
+
+    df_full = spark.read.format("parquet").load(f"/Volumes/raw/upsell/full_load/{tablename}/")
+
+    (df_full.coalesce(1)
+            .write
+            .format("delta")
+            .mode("overwrite")
+            .saveAsTable(f"{catalog}.{schema}.{tablename}"))
+    
+else:
+    print("Tabela já existente, ignoradno full-load")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT *
-# MAGIC FROM bronze.upsell.customers
-# MAGIC limit 3
-
-# COMMAND ----------
-
+# DBTITLE 1,Leitura do CDC
 (spark.read
       .format("parquet")
-      .load("/Volumes/raw/upsell/cdc/customers/")
-      .createOrReplaceTempView("customers"))
+      .load(f"/Volumes/raw/upsell/cdc/{tablename}/")
+      .createOrReplaceTempView(f"view_{tablename}"))
 
-query = '''
+query = f'''
     SELECT *
-    FROM customers
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY idCustomer ORDER BY modified_date DESC) = 1
+    FROM view_{tablename}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY {id_field} ORDER BY {timestamp_field} DESC) = 1
 '''
 
 df_cdc_unique = spark.sql(query)
 
 # COMMAND ----------
 
-bronze = delta.DeltaTable.forName(spark, "bronze.upsell.customers")
+# DBTITLE 1,Escrita CDC
+bronze = delta.DeltaTable.forName(spark, f"{catalog}.{schema}.{tablename}")
 
 # UPSERT
 (bronze.alias("b")
-       .merge(df_cdc_unique.alias("d"), "b.idCustomer = d.idCustomer") 
+       .merge(df_cdc_unique.alias("d"), f"b.{id_field} = d.{id_field}") 
        .whenMatchedDelete(condition = "d.OP = 'D'")
        .whenMatchedUpdateAll(condition = "d.OP = 'U'")
        .whenNotMatchedInsertAll(condition = "d.OP = 'I' OR d.OP = 'U'")
        .execute()
 )
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT count(*)
-# MAGIC FROM bronze.upsell.customers
-# MAGIC -- where idCustomer = '5f8fcbe0-6014-43f8-8b83-38cf2f4887b3'
