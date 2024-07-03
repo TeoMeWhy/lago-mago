@@ -1,0 +1,35 @@
+{
+  "fields": [
+    {
+      "metadata": {},
+      "name": "idCustomer",
+      "nullable": true,
+      "type": "string"
+    },
+    {
+      "metadata": {},
+      "name": "PointsCustomer",
+      "nullable": true,
+      "type": "long"
+    },
+    {
+      "metadata": {},
+      "name": "flEmail",
+      "nullable": true,
+      "type": "long"
+    },
+    {
+      "metadata": {},
+      "name": "OP",
+      "nullable": true,
+      "type": "string"
+    },
+    {
+      "metadata": {},
+      "name": "modified_date",
+      "nullable": true,
+      "type": "timestamp_ntz"
+    }
+  ],
+  "type": "struct"
+}
