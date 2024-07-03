@@ -1,12 +1,11 @@
 # Databricks notebook source
 # DBTITLE 1,Imports
 import delta
+import sys
 
-def table_exists(catalog, database, table):
-    count = (spark.sql(f"SHOW TABLES FROM {catalog}.{database}")
-                .filter(f"database = '{database}' AND tableName = '{table}'")
-                .count())
-    return count == 1
+sys.path.insert(0, "../lib/")
+
+import utils
 
 # COMMAND ----------
 
@@ -22,19 +21,19 @@ tablename = dbutils.widgets.get("tablename")
 id_field = dbutils.widgets.get("id_field")
 timestamp_field = dbutils.widgets.get("timestamp_field")
 
-# COMMAND ----------
-
-df_full = spark.read.format("parquet").load(f"/Volumes/raw/upsell/cdc/{tablename}/")
-df_schema = df_full.schema
+df_schema = utils.import_schema(tablename)
 
 # COMMAND ----------
 
 # DBTITLE 1,Ingestão do Full Load
-if not table_exists(catalog, schema, tablename):
+if not utils.table_exists(spark, catalog, schema, tablename):
 
     print("Tabela não existente, criando...")
 
-    df_full = spark.read.format("parquet").load(f"/Volumes/raw/upsell/full_load/{tablename}/")
+    df_full = (spark.read
+                    .format("parquet")
+                    .schema(df_schema)
+                    .load(f"/Volumes/raw/upsell/full_load/{tablename}/"))
 
     (df_full.coalesce(1)
             .write
