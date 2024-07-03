@@ -33,7 +33,7 @@ if not table_exists(catalog, schema, tablename):
             .saveAsTable(f"{catalog}.{schema}.{tablename}"))
     
 else:
-    print("Tabela já existente, ignoradno full-load")
+    print("Tabela já existente, ignorando full-load")
 
 # COMMAND ----------
 
