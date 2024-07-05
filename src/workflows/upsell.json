@@ -7,11 +7,11 @@
         },
         "webhook_notifications": {},
         "timeout_seconds": 0,
-        "trigger": {
-            "quartz_cron_expression": "50 0 9 * * ?",
+        "schedule": {
+            "quartz_cron_expression": "00 00 9 * * ?",
             "timezone_id": "America/Sao_Paulo",
             "pause_status": "UNPAUSED"
-        },
+          },
         "max_concurrent_runs": 1,
         "tasks": [
             {
