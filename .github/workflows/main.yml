@@ -1,0 +1,23 @@
+name: main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync_jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+      - name: Instalando Requeriments
+        working-directory: src/workflows
+        run: pip install -r requirements.txt
+      - name: Sync dos Jobs
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        working-directory: src/workflows
+        run: python main.py
