@@ -14,11 +14,6 @@ import ingestors
 catalog = "bronze"
 schemaname = "upsell"
 
-# # Usar como exemplo
-# tablename = "transactions"
-# id_field = "idTransaction"
-# timestamp_field = "modified_date"
-
 tablename = dbutils.widgets.get("tablename")
 id_field = dbutils.widgets.get("id_field")
 timestamp_field = dbutils.widgets.get("timestamp_field")
