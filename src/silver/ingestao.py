@@ -8,8 +8,8 @@ import utils
 import ingestors
 
 tablename = dbutils.widgets.get("tablename")
-idfield = dbutils.widgets.get("idfield")
-idfield_old = dbutils.widgets.get("idfield_old")
+idfield = dbutils.widgets.get("id_field")
+idfield_old = dbutils.widgets.get("id_field_old")
 
 # tablename = "transacoes"
 # idfield = "idTransacao"
