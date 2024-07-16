@@ -79,3 +79,67 @@ class IngestorCDC(Ingestor):
                    .foreachBatch(lambda df, batchID: self.upsert(df))
                    .trigger(availableNow=True))
         return stream.start()
+    
+
+class IngestorCDF(IngestorCDC):
+
+    def __init__(self, spark, catalog, schemaname, tablename, id_field, idfield_old):
+        
+        super().__init__(spark=spark,
+                         catalog=catalog,
+                         schemaname=schemaname,
+                         tablename=tablename,
+                         data_format='delta',
+                         id_field=id_field,
+                         timestamp_field='_commit_timestamp')
+        
+        self.idfield_old = idfield_old
+        self.set_query()
+        self.checkpoint_location = f"/Volumes/raw/{schemaname}/cdc/{catalog}_{tablename}_checkpoint/"
+
+    def set_schema(self):
+        return
+
+    def set_query(self):
+        query = utils.import_query(f"{self.tablename}.sql")
+        self.from_table = utils.extract_from(query=query)
+        self.original_query = query
+        self.query = utils.format_query_cdf(query, "{df}")
+
+    def load(self):
+        df = (self.spark.readStream
+                   .format('delta')
+                   .option("readChangeFeed", "true")
+                   .table(self.from_table))
+        return df
+    
+    def save(self, df):
+        stream = (df.writeStream
+                    .option("checkpointLocation", self.checkpoint_location)
+                    .foreachBatch(lambda df, batchID: self.upsert(df) )
+                    .trigger(availableNow=True))
+        return stream.start()
+    
+    def upsert(self, df):
+        df.createOrReplaceGlobalTempView(f"silver_{self.tablename}")
+
+        query_last = f"""
+        SELECT *
+        FROM global_temp.silver_{self.tablename}
+        WHERE _change_type <> 'update_preimage'
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY {self.idfield_old} ORDER BY _commit_timestamp DESC) = 1
+        """
+        df_last = self.spark.sql(query_last)
+        df_upsert = self.spark.sql(self.query, df=df_last)
+
+        (self.deltatable
+             .alias("s")
+             .merge(df_upsert.alias("d"), f"s.{self.id_field} = d.{self.id_field}") 
+             .whenMatchedDelete(condition = "d._change_type = 'delete'")
+             .whenMatchedUpdateAll(condition = "d._change_type = 'update_postimage'")
+             .whenNotMatchedInsertAll(condition = "d._change_type = 'insert' OR d._change_type = 'update_postimage'")
+               .execute())
+
+    def execute(self):
+        df = self.load()
+        return self.save(df)
