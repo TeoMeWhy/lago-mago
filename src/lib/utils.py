@@ -25,6 +25,7 @@ def extract_from(query:str):
                       .split("from")[-1]
                       .strip(" ")
                       .split(" ")[0]
+                      .split("\n")[0]
                       .strip(" "))
     return tablename
 
