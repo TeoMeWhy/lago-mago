@@ -1,5 +1,6 @@
 import json
 from pyspark.sql import types
+import datetime
 
 def import_query(path):
     with open(path, "r") as open_file:
@@ -49,3 +50,13 @@ def format_query_cdf(query:str, from_table:str):
     query = add_fields(query=query, fields=fields)
     query = add_generic_from(query=query, generic_from=from_table)
     return query
+
+
+def date_range(start, stop):
+    dt_start = datetime.datetime.strptime(start, "%Y-%m-%d")
+    dt_stop = datetime.datetime.strptime(stop, "%Y-%m-%d")
+    dates = []
+    while dt_start < dt_stop:
+        dates.append(dt_start.strftime("%Y-%m-%d"))
+        dt_start += datetime.timedelta(days=1)
+    return dates

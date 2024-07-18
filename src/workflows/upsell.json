@@ -163,6 +163,30 @@
                 "existing_cluster_id": "0809-155233-nc569ju7",
                 "timeout_seconds": 0,
                 "email_notifications": {}
+            },
+            {
+                "task_key": "gold_daily_report",
+                "depends_on": [
+                    {
+                        "task_key": "silver_transacoes"
+                    },
+                    {
+                        "task_key": "silver_transacao_produto"
+                    }
+                ],
+                "run_if": "ALL_SUCCESS",
+                "notebook_task": {
+                    "notebook_path": "src/gold/ingestao",
+                    "base_parameters": {
+                        "tablename": "daily_report",
+                        "dt_start": "{{job.start_time.iso_date}}",
+                        "dt_stop": "{{job.start_time.iso_date}}"
+                    },
+                    "source": "GIT"
+                },
+                "existing_cluster_id": "0809-155233-nc569ju7",
+                "timeout_seconds": 0,
+                "email_notifications": {}
             }
         ],
         "git_source": {
