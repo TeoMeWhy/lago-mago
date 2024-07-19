@@ -1,4 +1,4 @@
-SELECT DATE(t1.dtTransacao) AS dtRef,
+SELECT '{dt_ref}' AS dtRef,
       t2.descNomeProduto,
       count(DISTINCT t1.idTransacao) AS nrQuantidadeTrasacoes,
       count(DISTINCT t1.idCliente) AS nrQuantidadeClientes,
@@ -11,7 +11,8 @@ FROM silver.upsell.transacoes AS t1
 LEFT JOIN silver.upsell.transacao_produto AS t2
 ON t1.idTransacao = t2.idTransacao
 
-WHERE DATE(t1.dtTransacao) = '{dt_ref}'
+WHERE DATE(t1.dtTransacao) <= '{dt_ref}'
+AND DATE(t1.dtTransacao) > '{dt_ref}' - INTERVAL 28 DAY
 
 GROUP BY dtRef, t2.descNomeProduto GROUPING SETS ((dtRef, t2.descNomeProduto), (dtRef))
-ORDER BY dtRef
+ORDER BY dtRef, t2.descNomeProduto
