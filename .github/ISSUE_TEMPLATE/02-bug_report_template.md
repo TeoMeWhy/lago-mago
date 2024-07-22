@@ -3,7 +3,7 @@ nome: "Relatório de Bug"
 sobre: "Relate um problema para ajudar o projeto a melhorar."
 título: "[Bug]Coloque um titulo para sua solicitação"
 labels: "Tipo: Bug"
-atribuido: TeoCalvo
+atribuido: teoMeWhy
 
 ---
 
@@ -12,7 +12,7 @@ atribuido: TeoCalvo
 ## **Descreva o bug**
 <!-- Uma descrição clara e concisa do que é o bug. -->
 
-*
+-
 
 ---
 
@@ -43,7 +43,7 @@ atribuido: TeoCalvo
 ### **Comportamento esperado**
 <!-- Uma descrição clara e concisa do que você esperava que acontecesse. -->
 
-*
+-
 
 ---
 
@@ -66,4 +66,4 @@ e remova todos os elementos de lista com marcadores que não sejam relevantes pa
 ### **Contexto adicional**
 <!-- Adicione qualquer outro contexto ou informação adicional sobre o problema aqui. -->
 
-*
+-
