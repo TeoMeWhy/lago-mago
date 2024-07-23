@@ -163,13 +163,19 @@ class IngestorCubo:
         return df
     
     def save(self, df, dt_ref):
+        self.spark.sql(f"DELETE FROM {self.table} WHERE dtRef = '{dt_ref}'")
+        
         (df.write
-           .mode("overwrite")
-           .option("replaceWhere", f"dtRef = '{dt_ref}'")
+           .mode("append")
            .saveAsTable(self.table))
         
     def backfill(self, dt_start, dt_stop):
         dates = utils.date_range(dt_start, dt_stop)
+
+        if not utils.table_exists(self.spark, self.catalog, self.schemaname, self.tablename):
+            df = self.load(dt_ref=dates.pop(0))
+            df.write.saveAsTable(self.table)
+
         for dt in tqdm.tqdm(dates):
             df = self.load(dt_ref=dt)
             self.save(df=df, dt_ref=dt)
