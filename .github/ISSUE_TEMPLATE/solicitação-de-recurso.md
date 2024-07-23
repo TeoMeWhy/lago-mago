@@ -1,9 +1,9 @@
 ---
-nome: "Solicitação de Recurso"
-sobre: "Sugira uma ideia ou possível novo recurso para este projeto."
-título: "[Feat]Coloque um titulo para sua solicitação"
-labels: "Tipo: Recurso"
-atribuido: teoMeWhy
+name: Solicitação de Recurso
+about: 'Sua solicitação de recurso está relacionada a algum problema? Por favor, descreva:'
+title: Novo Recurso
+labels: ''
+assignees: ''
 
 ---
 

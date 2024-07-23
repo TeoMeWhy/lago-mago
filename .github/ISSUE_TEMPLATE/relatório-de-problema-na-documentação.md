@@ -1,15 +1,16 @@
 ---
-nome: "Relatório de problema na documentação ou README.md"
-sobre: "Relatar um problema na documentação ou arquivo README.md do projeto."
-título: "[Doc]Coloque um titulo para sua solicitação"
-labels: "Tipo: Documentação"
-atribuido: teoMeWhy
+name: Relatório de Problema na Documentação
+about: Uma descrição do que precisa de documentação
+title: Documentação
+labels: ''
+assignees: ''
 
 ---
+
 # **Relatório de Problema na Documentação**
 
-## **Descreva o bug**
-<!-- Uma descrição clara e concisa do que é o bug. -->
+## **Descreva o Documentação**
+<!-- Uma descrição clara e concisa do que é a documentação. -->
 
 -
 

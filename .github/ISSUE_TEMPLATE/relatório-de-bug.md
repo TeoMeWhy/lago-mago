@@ -1,9 +1,9 @@
 ---
-nome: "Relatório de Bug"
-sobre: "Relate um problema para ajudar o projeto a melhorar."
-título: "[Bug]Coloque um titulo para sua solicitação"
-labels: "Tipo: Bug"
-atribuido: teoMeWhy
+name: Relatório de Bug
+about: Descreva o bug
+title: Report de Bug
+labels: ''
+assignees: ''
 
 ---
 
