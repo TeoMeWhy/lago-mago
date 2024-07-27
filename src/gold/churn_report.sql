@@ -24,7 +24,7 @@ tb_old AS (
   
 )
 
-select '{dt_ref}' AS dtRef,
+select date('{dt_ref}') AS dtRef,
        count(t1.idCliente) AS qtdeBaseOld,
        count(t2.idCliente) AS qtdeBaseNewNotChurn,
        count(t1.idCliente) - count(t2.idCliente)  AS nrQtdeChurn,
