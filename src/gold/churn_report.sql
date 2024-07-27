@@ -28,7 +28,7 @@ select date('{dt_ref}') AS dtRef,
        count(t1.idCliente) AS qtdeBaseOld,
        count(t2.idCliente) AS qtdeBaseNewNotChurn,
        count(t1.idCliente) - count(t2.idCliente)  AS nrQtdeChurn,
-       count(t2.idCliente) / count(t1.idCliente) AS ChurnRate
+       1 - count(t2.idCliente) / count(t1.idCliente) AS ChurnRate
 
 FROM tb_old as t1
 
