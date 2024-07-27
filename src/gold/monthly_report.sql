@@ -2,6 +2,7 @@ SELECT DATE('{dt_ref}') AS dtRef,
        t2.descNomeProduto,
        count(DISTINCT t1.idTransacao) AS nrQuantidadeTrasacoes,
        count(DISTINCT t1.idCliente) AS nrQuantidadeClientes,
+       count(DISTINCT t1.idTransacao) / count(DISTINCT t1.idCliente) AS nrQuantidadeTransacaoCliente,
        sum(t1.nrPontosTransacao) AS nrQuantidadePontos,
        sum(CASE WHEN t1.nrPontosTransacao > 0 THEN t1.nrPontosTransacao ELSE 0 END) AS nrQuantidadePontosPos,
        sum(CASE WHEN t1.nrPontosTransacao < 0 THEN t1.nrPontosTransacao ELSE 0 END) AS nrQuantidadePontosNeg
