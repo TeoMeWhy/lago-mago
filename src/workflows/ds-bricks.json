@@ -122,8 +122,46 @@
           "source": "GIT"
         },
         "existing_cluster_id": "0809-155233-nc569ju7",
+        "libraries": [
+          {
+            "pypi": {
+              "package": "databricks_feature_engineering==0.6.0"
+            }
+          },
+          {
+            "pypi": {
+              "package": "pandas==2.2.2"
+            }
+          },
+          {
+            "pypi": {
+              "package": "mlflow==2.15.1"
+            }
+          },
+          {
+            "pypi": {
+              "package": "feature_engine==1.8.0"
+            }
+          },
+          {
+            "pypi": {
+              "package": "scikit_learn==1.5.1"
+            }
+          },
+          {
+            "pypi": {
+              "package": "cloudpickle==3.0.0"
+            }
+          }
+        ],
         "timeout_seconds": 0,
-        "email_notifications": {}
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
       }
     ],
     "git_source": {
