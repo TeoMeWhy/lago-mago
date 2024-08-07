@@ -235,6 +235,29 @@
                 "existing_cluster_id": "0809-155233-nc569ju7",
                 "timeout_seconds": 0,
                 "email_notifications": {}
+            },
+            {
+                "task_key": "DS-BRICKS",
+                "depends_on": [
+                    {
+                        "task_key": "silver_cliente"
+                    },
+                    {
+                        "task_key": "silver_produtos"
+                    },
+                    {
+                        "task_key": "silver_transacao_produto"
+                    },
+                    {
+                        "task_key": "silver_transacoes"
+                    }
+                ],
+                "run_if": "ALL_SUCCESS",
+                "run_job_task": {
+                    "job_id": 196700556036763
+                },
+                "timeout_seconds": 0,
+                "email_notifications": {}
             }
         ],
         "git_source": {
