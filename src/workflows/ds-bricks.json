@@ -96,6 +96,34 @@
           "alert_on_last_attempt": false
         },
         "webhook_notifications": {}
+      },
+      {
+        "task_key": "model_churn",
+        "depends_on": [
+          {
+            "task_key": "fs_dia_horario"
+          },
+          {
+            "task_key": "fs_geral"
+          },
+          {
+            "task_key": "fs_pontos"
+          },
+          {
+            "task_key": "fs_transacoes"
+          }
+        ],
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "src/model_churn/predict",
+          "base_parameters": {
+            "date": "{{job.start_time.iso_date}}"
+          },
+          "source": "GIT"
+        },
+        "existing_cluster_id": "0809-155233-nc569ju7",
+        "timeout_seconds": 0,
+        "email_notifications": {}
       }
     ],
     "git_source": {
