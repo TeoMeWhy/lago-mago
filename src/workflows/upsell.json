@@ -165,6 +165,27 @@
                 "email_notifications": {}
             },
             {
+                "task_key": "silver_produtos",
+                "depends_on": [
+                    {
+                        "task_key": "bronze_transactions_product"
+                    }
+                ],
+                "run_if": "ALL_SUCCESS",
+                "notebook_task": {
+                    "notebook_path": "src/silver/ingestao",
+                    "base_parameters": {
+                        "tablename": "produtos",
+                        "id_field": "descProduto",
+                        "id_field_old": "NameProduct"
+                    },
+                    "source": "GIT"
+                },
+                "existing_cluster_id": "0809-155233-nc569ju7",
+                "timeout_seconds": 0,
+                "email_notifications": {}
+            },
+            {
                 "task_key": "gold_daily_report",
                 "depends_on": [
                     {
